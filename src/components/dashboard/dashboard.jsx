@@ -195,7 +195,8 @@ function Dashboard(props) {
 
             {
                 display ?
-                <BookDetails bookName = {inputDetails.bookName} author = {inputDetails.author} />
+                <BookDetails bookName = {inputDetails.bookName} author = {inputDetails.author} id={inputDetails._id}
+                quantity={inputDetails.quantity} price = {inputDetails.price} discountPrice={inputDetails.discountPrice} />
                 :
                     booksList.map(
                         (book) => (<Box onClick = {()=>openSummary(book)}>

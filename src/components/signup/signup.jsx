@@ -196,7 +196,4 @@ function Signup(props) {
     )
 }
 export default Signup
-
-// "email": "gorenityanand96@gmail.com",
-// "password": "Nitya@123",
   

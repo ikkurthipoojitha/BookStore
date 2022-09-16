@@ -3,14 +3,17 @@ import { makeStyles } from '@mui/styles';
 import { Box } from "@mui/material";
 import Header from "../../header/header";
 import Button from '@mui/material/Button';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+
 import InputLabel from '@mui/material/InputLabel';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import OrderDetails from "../orderdetails/orderdetails";
+import {editUser} from "../../services/dataservice";
 
-
-
+const fullNameRegex = /^[A-Z]{1}[a-z]{2,}$/;
+const cityRegex = /^[A-Z]{1}[a-z]{2,}$/;
+const stateRegex = /^[A-Z]{1}[a-z]{2,}$/;
+const mobileNumberRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+const fullAddressRegex = /^[a-zA-Z0-9]+[\s]*[a-zA-Z0-9.\-\,\#]+[\s]*[a-zA-Z0-9.\-\,\#]+[a-zA-Z0-9\s.\-\,\#]*$/;
 
 const useStyle = makeStyles({
     locationboxtwo: {
@@ -127,7 +130,7 @@ const useStyle = makeStyles({
         height: '99px',
         border: '0px solid red',
         position: 'relative',
-        top: '60px',
+        top: '70px',
         left: '35px',
         display: 'flex',
         flexDirection: 'row',
@@ -186,27 +189,149 @@ const useStyle = makeStyles({
 })
 
 function CartOrder(props) {
-    const [toggle,setToggle] = useState(false)
     const classes = useStyle();
+    const [toggle,setToggle] = useState(false)
+    const [hide,setHide] = useState(false)
 
-    
-    const openOrder = ()=>{
-        setToggle(true)
+    const [regexObject, setRegexObject] = useState({
+        fullNameHelper:"",fullNameBorder:false,
+        cityBorder:false,cityHelper:"",
+        stateBorder:false,stateHelper:"",
+        mobileNumberBorder:false, mobileNumberHelper:"",
+        fullAddressBorder:false,fullAddressHelper:"",
+    })
+
+    const [userInput, setUserInput] = useState({
+        addressType: '', fullAddress: '', city: '', state: '',
+    })
+    const takingType = (event) => {
+        setUserInput(previousState => ({ ...previousState, addressType: event.target.value }))
+        console.log(event.target.value)
+
+
     }
+    const takingFullAddress = (event) => {
+        setUserInput(previousState => ({ ...previousState, fullAddress: event.target.value }))
+        console.log(event.target.value)
+
+    }
+    const takingCity = (event) => {
+        setUserInput(previousState => ({ ...previousState, city: event.target.value }))
+        console.log(event.target.value)
+
+    }
+    const takingState = (event) => {
+        setUserInput(previousState => ({ ...previousState, state: event.target.value }))
+        console.log(event.target.value)
+    }
+
+    const openOrder = ()=>{
+        props.openOrderSummary()
+        setHide(true)
+        let fullNameTest = fullNameRegex.test(userInput.fullName)
+        let cityTest = fullNameRegex.test(userInput.fullName)
+        let stateTest = fullNameRegex.test(userInput.fullName)
+        let mobileNumberTest = mobileNumberRegex.test(userInput.phone)
+        let fullAddressTest = fullAddressRegex.test(userInput.fullAddress)
+
+        if (fullNameTest === false) {
+            setRegexObject(prevState => ({
+                ...prevState,
+                fullNameBorder: true,
+                fullNameHelper: "Enter correct full name"
+            }))
+        }
+        else if (fullNameTest === true) {
+            setRegexObject(prevState => ({
+                ...prevState,
+                fullNameBorder: false,
+                fullNameHelper: ""
+            }))
+        }
+        if (mobileNumberTest === false) {
+            setRegexObject(previousState => ({
+                ...previousState,
+                mobileNumberBorder: true,
+                mobileNumberHelper: "enter correct mobile number"
+            }))
+        }
+        else if (mobileNumberTest === true) {
+            setRegexObject(previousState => ({
+                ...previousState,
+                mobileNumberBorder: false,
+                mobileNumberHelper: ""
+            }))
+        }
+        if (fullAddressTest === false) {
+            setRegexObject(previousState => ({
+                ...previousState,
+                fullAddressBorder: true,
+                fullAddressHelper: "enter correct address"
+            }))
+        }
+        else if (fullAddressTest === true) {
+            setRegexObject(previousState => ({
+                ...previousState,
+                fullAddressBorder: false,
+                fullAddressHelper: ""
+            }))
+        }
+        if (cityTest === false) {
+            setRegexObject(previousState => ({
+                ...previousState,
+                cityBorder: true,
+                cityHelper: "enter correct city"
+            }))
+        }
+        else if (cityTest === true) {
+            setRegexObject(previousState => ({
+                ...previousState,
+                cityBorder: false,
+                cityHelper: ""
+            }))
+        }
+        if (stateTest === false) {
+            setRegexObject(previousState => ({
+                ...previousState,
+                stateBorder: true,
+                stateHelper: "enter correct state"
+            }))
+        }
+        else if (stateTest === true) {
+            setRegexObject(previousState => ({
+                ...previousState,
+                stateBorder: false,
+                stateHelper: ""
+            }))
+        }
+    // if(fullAddressTest === true &&cityTest === true && stateTest === true){
+            editUser(userInput).then((response) => {
+             console.log(response, "edited user")
+                 }).catch((error) => {
+            console.log(error)})
+       //  }
+    }
+    
+    
     
     return (
         <div>
-            
-              
+             
             <div className={classes.addressboxtwo}>
                 <div className={classes.customer}>
                     <span style={{ color: '#333232', fontSize: '18px', position: 'relative', top: '5px' }}>Customer Details</span>
                     <Button variant="outlined" style={{ color: '#A03037', border: '1px solid #A03037' }}>Add New Address</Button>
                 </div>
                 <div className={classes.nametextfield}>
-                    <TextField id="outlined-basic" label="Full Name" defaultValue="Poonam Yadav" variant="outlined" style={{ width: '250px', height: '30px' }} />
-                    <TextField id="outlined-basic" label="Mobile Number" defaultValue="6325897410" variant="outlined" style={{ width: '250px', height: '30px' }} />
-
+                    <TextField id="outlined-basic" label="FullName"  variant="outlined"
+                    //onChange={takingFullName} 
+                   //error={regexObject.fullNameBorder} helperText= {regexObject.fullNameHelper}
+                     style={{ width: '250px', height: '30px' }} />
+                    <TextField id="outlined-basic" label="MobileNumber"  variant="outlined"
+                    //onChange={takingMobileNumber}
+                    //error={regexObject.mobileNumberBorder} helperText= {regexObject.mobileNumberHelper}
+                     style={{ width: '250px', height: '30px' }} />
+                    {/* defaultValue="Poonam Yadav" defaultValue="6325897410" */}
                 </div>
                 <div className={classes.address}>
                     {/* <TextField id="outlined-basic" label="Address" variant="outlined" style={{width:'100%',height:'97%'}}/> */}
@@ -216,96 +341,48 @@ function CartOrder(props) {
                         multiline
                         maxRows={2}
                         // value={value}
-                        //onChange={handleChange}
-                        defaultValue="BridgeLabz Solutions LLP, No. 42, 14th Main,  Sector 4,Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore"
-
+                        onChange={takingFullAddress}
+                       //error={regexObject.fullAddressBorder} helperText= {regexObject.fullAddressHelper}
+                      //  defaultValue="BridgeLabz Solutions LLP, No. 42, 14th Main,  Sector 4,Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore"
                     />
                 </div>
                 <div className={classes.nametextfield}>
-                    <TextField id="outlined-basic" label="CityTown" defaultValue="Bengaluru" variant="outlined" style={{ width: '250px', height: '30px' }} />
-                    <TextField id="outlined-basic" label="state" defaultValue="Karnataka" variant="outlined" style={{ width: '250px', height: '30px' }} />
+                    <TextField id="outlined-basic" label="city"  variant="outlined" 
+                    // error={regexObject.cityBorder} helperText= {regexObject.cityHelper}
+                    style={{ width: '250px', height: '30px' }} onChange={takingCity}/>
+                    <TextField id="outlined-basic" label="state"  variant="outlined"
+                  //  error={regexObject.stateBorder} helperText= {regexObject.stateHelper}
+                     style={{ width: '250px', height: '30px' }} onChange={takingState} />
                 </div>
                 <div className={classes.radiotext}>
                     <p>Type</p>
-                    <div className={classes.radiobuttons}>
+                    <div className={classes.radiobuttons} 
+                    onChange={takingType}
+                    >
                         <div>
-                            <input type="radio" name="radio" />
+                            <input type="radio" value="Home" name="radio" />
                             <label>Home </label>
                         </div>
                         <div>
-                            <input type="radio" name="radio" color="red" checked />
+                            <input type="radio" name="radio" value="Work"  />
                             <label>Work </label>
                         </div>
                         <div>
-                            <input type="radio" name="radio" />
+                            <input type="radio" name="radio" value="Other" />
                             <label>Other </label>
                         </div>
-
                     </div>
                 </div>
                 <div className={classes.continue}>
-                    <Button variant="contained" style={{ width: '150px' }} onClick={openOrder}>Continue</Button>
+                    {
+                        hide ? <div></div>:               
+                     <Button variant="contained" style={{ width: '150px' }} onClick={openOrder}>
+                        Continue</Button>
+
+                    }
 
                 </div>
-
-
             </div>
-            
-            {/* <div className={classes.orderboxtwo}> */}
-                {/* <span style={{ color: '#333232', position: 'relative', left: '20px', top: '20px' }}>
-                     Order Summary </span> */}
-                {/* <div className={classes.cartimagetwo}>
-                    <img src={require("./cover.png")} alt="img"
-                        style={{
-                            width: '15%', height: '50%', position: 'relative', left: '10px',
-                            top: '20px', border: '0px solid red', padding: '2px',
-                        }} />
-
-                    <div className={classes.carttexttwo}> */}
-
-                        {/* <span style={{
-                            font: ' 15px Arial, sans-serif', color: '#0A0102',
-                            border: '0px solid green', position: 'relative', top: '15px'
-                        }}>
-                            Don't Make Me Think <br /></span>
-
-                        <span style={{
-                            fontSize: '10px', border: '0px solid green', color: 'grey',
-                            position: 'relative', top: '12px',
-                        }}>
-                            by steve kurg
-                            {/* by {props.book.author} */}
-                        {/* </span>  */}
-
-                        {/* <div
-                            style={{
-                                display: 'flex', flexDirection: 'row', font: '13px Arial, sans-serif',
-                                position: 'relative', top: '19px',
-                                border: '0px solid orange', height: '18%'
-                            }}
-                        ><b>Rs.1500</b> &nbsp; &nbsp;
-                            <span style={{ textDecoration: 'line-through' }}>
-                                Rs.5000
-                            </span>
-                        </div> */}
-
-                    {/* </div>
-                </div> */}
-                {/* <div className={classes.checkout}>
-                    <Button variant="contained" style={{ width: '150px',top:'0px' }}>checkOut</Button>
-
-                </div> */}
-            {/* </div> */}
-            <div>
-                {
-                    toggle ? <OrderDetails />: <MyCart />
-            //         <div className={classes.orderboxthree}>
-            //    <span style={{color:'#333232',position:'relative',left:'20px',top:'20px'}}> Order Summary </span>
-            // </div>
-
-                }
-            </div>
-            
         </div>
     )
 

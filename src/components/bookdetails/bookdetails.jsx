@@ -9,6 +9,14 @@ import Rating from '@mui/material/Rating';
 import TextField from '@mui/material/TextField';
 import Footer from '../footer/footer';
 import { Box } from "@mui/material";
+import { addToCart, getCartItem ,getWishList} from '../../services/dataservice';
+import { addWishList } from '../../services/dataservice';
+import { useState } from 'react';
+import {cartItemQuantity} from '../../services/dataservice';
+import { useNavigate } from "react-router-dom";
+import Dashboard from "../dashboard/dashboard";
+import { useEffect } from 'react';
+
 
 const useStyle = makeStyles({
     detailmaincontainer: {
@@ -16,22 +24,22 @@ const useStyle = makeStyles({
         height: '590px',
         position: 'relative',
         // bottom: '5px',
-        bottom:'35px',
+        bottom: '35px',
         left: '75px',
         opacity: '1',
         border: '0px solid green',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        
+
     },
-    smallimages:{
-        width:'5%',
-        height:'20%',
-        border:'0px solid blue',
-        display:'flex',
-        flexDirection:'column',
-        justifyContent:'flex-start',
+    smallimages: {
+        width: '5%',
+        height: '20%',
+        border: '0px solid blue',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
     },
     bookimage: {
         width: '35%',
@@ -39,16 +47,16 @@ const useStyle = makeStyles({
         position: 'relative',
         // left:'100px',
         border: '0px solid orange',
-        display:'flex',
-        flexDirection:'column',
-        justifyContent:'flex-start',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
     },
-    imgborder:{
-        width:'85%',
-        height:'78%',
-        border:'1px solid grey',
-        position:'relative',
-        marginRight:'20px',
+    imgborder: {
+        width: '85%',
+        height: '78%',
+        border: '1px solid grey',
+        position: 'relative',
+        marginRight: '20px',
     },
     wishlistbutton: {
         width: '300px',
@@ -78,7 +86,7 @@ const useStyle = makeStyles({
         border: '1px solid lightgrey',
         position: 'relative',
         top: '40px',
-        left:'20px'
+        left: '20px'
     },
     linetwo: {
         width: '95%',
@@ -86,9 +94,9 @@ const useStyle = makeStyles({
         border: '1px solid lightgrey',
         position: 'relative',
         top: '70px',
-        left:'20px'
+        left: '20px'
     },
-    
+
     descriptionbook: {
         width: '95%',
         height: '280px',
@@ -122,62 +130,213 @@ const useStyle = makeStyles({
         position: 'relative',
         top: '10px',
     },
-    reviewcontainer:{
-        width:'100%',
-        height:'300px',
+    reviewcontainer: {
+        width: '100%',
+        height: '300px',
         position: 'relative',
-        top:'80px',
-        left:'10px',
+        top: '80px',
+        left: '10px',
         border: '0px solid red',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
         alignContent: 'flex-start'
-    }
+    },
+    count:{
+        width:'12vw',
+        height:'5vh',
+        border:'0px solid green',
+        position:'relative',
+        top:'0px',
+        left:'0px',
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'space-around',
+        backgroundColor:'white',
+    },
 
 })
 function BookDetails(props) {
+    const navigate = useNavigate();
+
     const classes = useStyle();
-    const handleAdd=(e)=>{
-        console.log('you clicked add to cart')
+    const [wishIcon,setWishIcon] = useState(false)
+
+    const [counterbtn, setCounterBtn] = useState(false)
+    const [counterOne, setCounterOne] = useState(1)
+    const [cartId,setCartId] = useState([])
+    const [cartBookId,setCartBookId] = useState([])
+    const [wishListId,setWishListId] = useState([])
+    const [wishBookId,setWishBookId] = useState([])
+    const handleCounter = (_id,counterOne)=>{
+        console.log("inside hanlde counter")
+        cartItemQuantity(_id,counterOne).then((response)=>{
+        console.log(response,"increment response")
+        }).catch((error)=>{console.log(error);})
+    }
+    const increment = () =>{
+         setCounterOne(counterOne  + 1 )
+         let cartItem = {
+            cartItem_id:props.id,
+        }
+        let quantity={
+            quantityToBuy:counterOne + 1
+        }
+        //console.log('object',quantity)
+        cartItemQuantity(cartItem,quantity).then((response)=>{
+      console.log(response,"increment response")
+        }).catch((error)=>{console.log(error);})
+    }
+
+    const decrement = () =>{
+        if(counterOne > 1){
+            setCounterOne(counterOne -  1 )          
+        
+        let cartItem = {
+            cartItem_id:props.id,
+        }
+        let quantity={
+            quantityToBuy:counterOne + 1
+        }
+        console.log('object',quantity)
+        cartItemQuantity(cartItem,quantity).then((response)=>{
+            console.log(response,"decrement response")
+        }).catch((error)=>{console.log(error);})
+        }
+        else {
+            setCounterOne(1)
+        }
+    }
+    const handleWishList = () => {
+        setWishIcon(true)
+        let object = {product_id:props.id}
+        addWishList(object).then((response) => {
+
+            console.log(response, "added to wishlist")
+        }).catch((error) => {
+            console.log(error)
+        })
+        // setWishIcon(prevState =>({
+        //     ...prevState,
+        //     wishIcon:true
+        // }))
+    }
+
+    useEffect(()=>
+    {
+        getCartItem().then((response)=>
+        {
+            console.log(response)
+            let idList = response.data.result.filter((cart)=>{
+                if(props.id === cart.product_id._id){
+                    setCounterOne(cart.quantityToBuy)
+                    setCartId(cart._id)
+                    console.log(cart._id,cart.quantityToBuy,"id")
+                    return cart
+                }
+                })
+            setCartBookId(idList)
+        }).catch((error)=>console.log(error))
+
+        getWishList().then((response)=>
+        {
+            console.log(response)
+            let wishId = response.data.result.filter((cart)=>{
+                if(props.id === cart.product_id._id){
+                   // setCounterOne(cart.quantityToBuy)
+                    setWishListId(cart._id)
+                    console.log(cart._id,cart.quantityToBuy,"id")
+                    return cart
+                }
+                })
+                setWishBookId(wishId)
+        }).catch((error)=>console.log(error))
+        
+    },[])
+    
+    const handleCart = () => {
+        //console.log(props.id)
+        setCounterBtn(true)
+        let object = {product_id:props.id}
+
+        addToCart(object).then((response) => {
+
+            console.log(response, "added to Cart")
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
+
+    const openDashBoardPage = ()=>{
+        navigate('/dashboard')
+    }
+    const removeFromWishlist=()=>{
+        setWishIcon(false)
     }
 
     return (
         <div>
             {/* <Header />  */}
-            <Box style={{display:'flex',flexDirection:'row',justifyContent:'flex-start', width:'100%',height:'6%',
-            position:'relative',left:'70px',bottom:'48px',backgroundColor:'white',border:'0px solid red'}}>Home/<b>Book(01)</b></Box>
+            <Box style={{
+                display: 'flex', flexDirection: 'row', justifyContent: 'flex-start',color:'black', width: '100%', height: '6%',
+                position: 'relative', left: '70px', bottom: '48px',backgroundColor: 'white', border: '0px solid red'
+            }} onClick={openDashBoardPage}>Home/<b>Book(01)</b></Box>
             <div className={classes.detailmaincontainer}>
                 <div className={classes.smallimages}>
-                <img src={require("./cover.png")} alt="img"
+                    <img src={require("./cover.png")} alt="img"
                         style={{
                             width: '90%', height: '50%', position: 'relative',
                             top: '0px', border: '1px solid red', padding: '2px',
                         }} />
-                <img src={require("./imgcover.png")} alt="img"
+                    <img src={require("./imgcover.png")} alt="img"
                         style={{
                             width: '90%', height: '50%', position: 'relative',
                             top: '0px', border: '1px solid grey', padding: '2px',
                         }} />
-                
-                    
+
+
                 </div>
                 <div className={classes.bookimage}>
                     <div className={classes.imgborder}>
-                    <img src={require("./cover.png")} alt="img"
-                        style={{
-                            width: '90%', height: '90%', position: 'relative',
-                            top: '10px',left:'0px', border: '0px solid lightgrey',padding:'10px'
-                        }} />
-                    
+                        <img src={require("./cover.png")} alt="img"
+                            style={{
+                                width: '90%', height: '90%', position: 'relative',
+                                top: '10px', left: '0px', border: '0px solid lightgrey', padding: '10px'
+                            }} />
+
                     </div>
-                    <div className={classes.wishlistbutton}> 
-                        <Button variant="contained" onClick={handleAdd}
-                        style={{ width: '45%', height: '75%', color: 'white', backgroundColor: '#A03037' }}>
-                            Add To Cart</Button>
-                        <Button variant="contained" style={{ width: '45%', height: '75%', color: 'white', backgroundColor: '#333333' }}>
-                            < FavoriteIcon style={{ color: 'white', height: '20px' }} /> &nbsp;
-                            Wishlist</Button>
+                    <div className={classes.wishlistbutton}>
+                        {
+                            (cartId.length === 0 ) ? <Button variant="contained" onClick={handleCart}
+                            style={{ width: '45%', height: '75%', color: 'white', backgroundColor: '#A03037' }}>
+                            Add To Bag</Button>
+                            :
+
+                                <div className={classes.count}>
+                                    <button style={{ width: '14%' }} onClick={decrement}>-</button> 
+                                    {/* onClick={decrement(props.id,props.quantity)} */}
+                                    <button style={{ width: '30%' }}>{counterOne}</button>
+
+                                    <button style={{ width: '14%' }} onClick={increment}>+</button>
+                                </div>
+
+                        }
+                        {
+                        (wishListId.length === 0) ? 
+                        <Button onClick = {handleWishList} variant="contained" style={{ width: '45%', height: '75%', color: 'white', backgroundColor: '#333333' }}>
+
+                        < FavoriteIcon style={{ color: 'white', height: '20px' }} /> wishlist
+                        </Button>
+                        : 
+                        <Button onClick = {removeFromWishlist} style={{ width: '45%', height: '75%', color: 'white', border:'1px solid lightgrey' }}>
+
+                        < FavoriteIcon style={{ color: 'red', height: '20px' }} /></Button> 
+
+  
+                        }
+                          
+                            
+                        
 
                     </div>
 
@@ -211,23 +370,23 @@ function BookDetails(props) {
                             color: 'white', backgroundColor: 'green', width: '20px', height: '24px',
                             position: 'relative', top: '0px'
                         }} />
-                        <p style={{ color: 'black', fontSize: '9px' }}>&nbsp;&nbsp;(20)</p>
+                        <p style={{ color: 'black', fontSize: '9px' }}>&nbsp;&nbsp;({props.quantity})</p>
                     </div>
                     <div
                         style={{
-                            display: 'flex', flexDirection: 'row', font: '18px Arial, sans-serif', position: 'relative', 
+                            display: 'flex', flexDirection: 'row', font: '18px Arial, sans-serif', position: 'relative',
                             border: '0px solid orange', height: '6%', top: '30px', left: '20px'
                         }}
-                    ><b>Rs.1500</b> &nbsp; &nbsp;
-                        <span style={{ textDecoration: 'line-through',font: '14px Arial, sans-serif', }}>
+                    ><b>Rs.{props.discountPrice}</b> &nbsp; &nbsp;
+                        <span style={{ textDecoration: 'line-through', font: '14px Arial, sans-serif', }}>
                             {/* Rs.2050 */}
-                            Rs.2050
+                            Rs.{props.price}
                         </span>
                     </div>
                     <div className={classes.line}></div>
                     <div className={classes.descriptionbook}>
                         <span style={{ fontSize: '20px', color: 'grey', textAlign: 'left' }}> * Book Detail <br /></span>
-                        <span style={{ fontSize: '18px', color: 'black', textAlign: 'left', position: 'relative', top: '5px',left:'10px' }}>
+                        <span style={{ fontSize: '18px', color: 'black', textAlign: 'left', position: 'relative', top: '5px', left: '10px' }}>
                             A visually stunning and comprehensive guide to the hit BBC series, Sherlock.
                             This is Sherlock from the ground up from story and script development to casting, sets, costumes, props, music and more.
                         </span>
@@ -251,40 +410,46 @@ function BookDetails(props) {
                                 variant="standard"
                             />
                             <Button variant="contained"
-                                style={{ width: '15%', height: '15%',border:'0px solid red', 
-                                position: 'relative', left: '420px', top: '30px' }}>
+                                style={{
+                                    width: '15%', height: '15%', border: '0px solid red',
+                                    position: 'relative', left: '420px', top: '30px'
+                                }}>
                                 Submit</Button>
                         </div>
                     </div>
-                    <div className = {classes.reviewcontainer}>
-                        <p style={{ width:'30%',height:'15%',border:'0px solid green',left:'0px',
-                        position:'relative',borderRadius:'0px'}}>
-                            <span style={{border:'1px solid grey',borderRadius:'5px',position:'relative',}}>AC &nbsp;</span>
+                    <div className={classes.reviewcontainer}>
+                        <p style={{
+                            width: '30%', height: '15%', border: '0px solid green', left: '0px',
+                            position: 'relative', borderRadius: '0px'
+                        }}>
+                            <span style={{ border: '1px solid grey', borderRadius: '5px', position: 'relative', }}>AC &nbsp;</span>
                             &nbsp;&nbsp;&nbsp;Aniket Chile</p>
-                            <Rating name="size-medium" spacing={2} defaultValue={3} 
+                        <Rating name="size-medium" spacing={2} defaultValue={3}
                             style={{ position: 'relative', bottom: '5px', left: '50px' }} />
 
-                        <span style={{width:'85%',position:'relative',bottom:'4px',left:'55px',textAlign:'left',fontSize:'15px'}}>
+                        <span style={{ width: '85%', position: 'relative', bottom: '4px', left: '55px', textAlign: 'left', fontSize: '15px' }}>
                             Good Product. Even Though the translation could have been better. Chanakaya's neeti are thought
                             provoking and has wrote on  different topics and his writings are succint.
                         </span>
-                            
+
                     </div>
-                    <div className = {classes.reviewcontainer}>
-                        <p style={{ width:'30%',height:'15%',border:'0px solid green', left:'10px',
-                        position:'relative',borderRadius:'0px'}}>
-                            <span style={{border:'1px solid grey',borderRadius:'5px',position:'relative',}}>SB &nbsp;</span>
+                    <div className={classes.reviewcontainer}>
+                        <p style={{
+                            width: '30%', height: '15%', border: '0px solid green', left: '10px',
+                            position: 'relative', borderRadius: '0px'
+                        }}>
+                            <span style={{ border: '1px solid grey', borderRadius: '5px', position: 'relative', }}>SB &nbsp;</span>
                             &nbsp;&nbsp;&nbsp;Shweta Bodkar</p>
-                            <Rating name="size-medium" spacing={2} defaultValue={3} 
+                        <Rating name="size-medium" spacing={2} defaultValue={3}
                             style={{ position: 'relative', bottom: '5px', left: '50px' }} />
 
-                        <span style={{width:'85%',position:'relative',bottom:'5px',left:'55px',textAlign:'left',fontSize:'15px'}}>
+                        <span style={{ width: '85%', position: 'relative', bottom: '5px', left: '55px', textAlign: 'left', fontSize: '15px' }}>
                             Good Product. Even Though the translation could have been better. Chanakaya's neeti are thought
                             provoking and has wrote on  different topics and his writings are succint.
                         </span>
-                            
+
                     </div>
-                     {/* <div className = {classes.reviewcontainer}>
+                    {/* <div className = {classes.reviewcontainer}>
                         <p style={{ width:'30%',height:'15%',border:'0px solid green',
                         position:'relative',borderRadius:'0px'}}>
                             <span style={{border:'1px solid grey',borderRadius:'5px',position:'relative',}}>SB &nbsp;</span>
