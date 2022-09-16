@@ -5,6 +5,9 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
 import { login } from "../services/userservice";
+import Dashboard from "../components/dashboard/dashboard";
+import { useNavigate } from "react-router-dom";
+
 const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%^&-+=()])([a-zA-Z0-9]*).{8,}$/;
 
@@ -78,6 +81,7 @@ const useStyle = makeStyles({
 })
 
 function Login(props) {
+    const navigate = useNavigate()
     const openSignup = () =>{
         props.listenToLogin()
     }
@@ -143,6 +147,7 @@ function Login(props) {
             login(userDetails).then((response) => {
                 console.log(response);
                 localStorage.setItem("token", response.data.result.accessToken)
+                navigate('/Dashboard')
             })
 
             console.log("login successful")
