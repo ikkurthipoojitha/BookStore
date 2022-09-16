@@ -12,6 +12,7 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import { useNavigate } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -64,6 +65,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function Header() {
+    const navigate = useNavigate()
+
+    const openMyCart =()=>{
+        navigate('/mycart')
+    }
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
     const classes = useStyle();
@@ -148,18 +154,6 @@ function Header() {
 
                     </IconButton>
 
-                    {/* <Typography
-                        variant="h5"
-                        noWrap
-                        component="div"
-                        color='black'
-                        sx={{ display: { xs: 'none', sm: 'block' } , border:'1px solid blue'}}
-                    >
-                        BookStore 
-                    </Typography>
-                    <div style={{ width: '5%' ,border:'0px solid blue'}}></div> */}
-
-
                     <Search>
                         <SearchIconWrapper>
                             <SearchIcon style={{ color: 'default' }} />
@@ -188,7 +182,7 @@ function Header() {
                             <Box style={{ fontSize: '8px', color: 'white' }}> Profile</Box>
 
                         </IconButton>
-                        <IconButton
+                        <IconButton onClick={openMyCart}
                             size="large"
                             color="inherit"
                             sx={{
@@ -200,7 +194,7 @@ function Header() {
                                 < ShoppingCartOutlinedIcon size="medium" style={{ color: 'white' }} />
 
                             </Badge>
-                            <Box style={{ fontSize: '8px', color: 'white' }}>Cart</Box>
+                            <Box style={{ fontSize: '8px', color: 'white' }} >Cart</Box>
                         </IconButton>
                     </Box>
                 </Toolbar>
