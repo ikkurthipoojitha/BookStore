@@ -5,6 +5,7 @@ import MyCart from "../cart/cart";
 import Dashboard from "../dashboard/dashboard";
 import Shopping from "../shopping/shopping";
 import Signup from "../signup/signup";
+import Wishlist from "../wishlist/wishlist";
 
 function RouterOne(){
     return (
@@ -16,6 +17,7 @@ function RouterOne(){
                 <Route  path = '/dashboard' element = {<Dashboard />} />
                 <Route  path = '/mycart' element = {<MyCart />} />
                 <Route  path = '/shopping' element = {<Shopping />} />
+                <Route  path = '/wishlist' element = {<Wishlist />} />
 
             </Routes>
             </Router>

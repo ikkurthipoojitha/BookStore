@@ -17,6 +17,9 @@ import { Box } from "@mui/material";
 import { getBookList } from "../../services/dataservice";
 import Footer from "../footer/footer";
 import BookDetails from "../bookdetails/bookdetails";
+import PaginationRounded from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+import PaginationBox from "../paginationbox/paginationbox";
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -84,19 +87,33 @@ const useStyle = makeStyles({
         border: '0px solid  orange',
         position: 'relative',
         right: '240px',
-    }
+    },
+    
 })
 
 function Dashboard(props) {
+   
     const [booksList, setBooksList] = useState([])
-    const [inputDetails,setInputDetails] = useState({})
-    const [display,setDisplay] = useState(false)
+    const [inputDetails, setInputDetails] = useState({})
+    const [display, setDisplay] = useState(false)
 
-    const openSummary = (bookObj) =>{
-        console.log(bookObj,"this is  book details")
+    const [searchResults,setSearchResults] = useState([])
+    const [pageHide,setPageHide] = useState(false);
+    const [currentPage,setCurrentPage] = useState(1);
+    const [postPerPage,setPostPerPage] = useState(8);
+
+    const lastPostIndex = currentPage * postPerPage;
+    const firstPostIndex = lastPostIndex - postPerPage;
+    const currentItems = booksList.slice(firstPostIndex,lastPostIndex);
+    console.log(currentItems,"pagination slice")
+      
+
+    const openSummary = (bookObj) => {
+        console.log(bookObj, "this is  book details")
         setInputDetails(bookObj)
         setDisplay(true)
-        console.log(inputDetails.bookName,"this is book data")
+        console.log(inputDetails.bookName, "this is book data")
+        setPageHide(true)
     }
 
     const getBook = () => {
@@ -109,11 +126,11 @@ function Dashboard(props) {
         getBook()
     }, [])
 
-    const autoRefresh = () =>{
+    const autoRefresh = () => {
         getBook()
     }
-
     
+
     const classes = useStyle();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
@@ -124,9 +141,16 @@ function Dashboard(props) {
         setAnchorEl(null);
     };
 
+
+    const [searchWord,setSearchWord] = React.useState('')
+    const searchBook =(event) =>{
+        setSearchWord(event.target.value)
+    }
+    console.log(searchWord,"searching..")
+
     return (
         <div>
-            <Header />
+            <Header searchWord ={searchWord}  searchBook={searchBook}/>
             <div className={classes.heading}>
                 <div className={classes.booktext}>
                     <p style={{ fontSize: '15px' }}>
@@ -179,35 +203,42 @@ function Dashboard(props) {
                     </StyledMenu>
                 </div>
             </div>
-            {/* <Box sx={{ width:'82vw', height:'auto',border:'0px solid green',position:'relative',left:'70px', top:'10px',display: 'flex', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
+           
+            <Box sx={{
+                width: '82vw', height: 'auto', border: '0px solid green',
+                position: 'relative', left: '70px', top: '10px', display: 'flex', justifyContent: 'flex-start',
+                flexWrap: 'wrap'
+            }}>
+
                 {
-                    booksList.map(
-                        (book) => (<Book book={book}
-                            //  onClick={handleDetails}
-                        />)
-                    )
+                    display ?
+                        <BookDetails bookName={inputDetails.bookName} author={inputDetails.author} id={inputDetails._id}
+                            quantity={inputDetails.quantity} price={inputDetails.price} discountPrice={inputDetails.discountPrice} />
+                        :
+                        booksList.
+                        filter(book => book.bookName.toLowerCase().includes(searchWord.toLowerCase()))
+                        .slice(firstPostIndex,lastPostIndex).map(
+
+                            (book) => (<Box onClick={() => openSummary(book)}>
+                                <Book book={book} key={book._id}
+                                // {search.length < 1 ? book : searchResults } term = {search}
+                                //  searchKeyword = {searchHandler}
+                                 />
+                                
+                            </Box>)
+                        )
                 }
-
-            </Box> */}
-            <Box sx={{ width:'82vw', height:'auto',border:'0px solid green',
-            position:'relative',left:'70px', top:'10px',display: 'flex', justifyContent: 'flex-start',
-             flexWrap: 'wrap' }}>
-
-            {
-                display ?
-                <BookDetails bookName = {inputDetails.bookName} author = {inputDetails.author} id={inputDetails._id}
-                quantity={inputDetails.quantity} price = {inputDetails.price} discountPrice={inputDetails.discountPrice} />
-                :
-                    booksList.map(
-                        (book) => (<Box onClick = {()=>openSummary(book)}>
-                            <Book key = {book._id} book = {book} autoRefresh = {autoRefresh} />
-                        </Box>)
-                    )
-            }
             </Box>
-            <Footer /> 
-        </div>
-    )
+            {
+                pageHide ? null :
+            <Box>
+                     <PaginationBox  totalPosts={booksList.length} 
+                    postPerPage = {postPerPage}
+                    setCurrentPage={setCurrentPage} />
+            </Box>
+}
+            <Footer />
+        </div>    )
 }
 
 export default Dashboard

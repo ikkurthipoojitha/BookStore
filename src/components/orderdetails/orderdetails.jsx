@@ -12,20 +12,20 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 
 
 const useStyle = makeStyles({
-    orderboxtwo: {
+    orderboxtwo3: {
         width: '805px',
-        height: '240px',
+        height: 'auto',
         border: '1px solid #707070',
         position: 'relative',
         left: '140px',
-        top: '60px',
+        top: '50px',
         textAlign: 'left',
 
     },
     customer: {
         width: '90%',
         height: '10%',
-        border: '0px solid green',
+        border: '1px solid green',
         position: 'relative',
         top: '20px',
         left: '20px',
@@ -97,7 +97,7 @@ const useStyle = makeStyles({
     cartimagetwo: {
         width: '38%',
         height: '50%',
-        border: '0px solid green',
+        border: '1px solid green',
         position: 'relative',
         top: '40px',
         left: '20px',
@@ -125,7 +125,7 @@ function OrderDetails(props) {
     
     return (
         <div>
-             <div className={classes.orderboxtwo}>
+             <div className={classes.orderboxtwo3}>
                 <span style={{ color: '#333232', position: 'relative', left: '20px', top: '20px' }}>
                      Order Summary </span> 
                 <div className={classes.cartimagetwo}>

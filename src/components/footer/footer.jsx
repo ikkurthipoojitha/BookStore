@@ -13,8 +13,8 @@ const useStyle = makeStyles({
         display:'flex',
         flexDirection:'row',
         justifyContent:'flex-start',
-        top:'30px',
-        marginTop:'235px'
+        top:'20px',
+        marginTop:'195px'
     },
 })
 

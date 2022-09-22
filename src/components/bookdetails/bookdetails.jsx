@@ -154,6 +154,9 @@ const useStyle = makeStyles({
         justifyContent:'space-around',
         backgroundColor:'white',
     },
+    pagenumber:{
+       // display:'none',
+    },
 
 })
 function BookDetails(props) {
@@ -175,7 +178,7 @@ function BookDetails(props) {
         }).catch((error)=>{console.log(error);})
     }
     const increment = () =>{
-         setCounterOne(counterOne  + 1 )
+         setCounterOne(counterOne =>counterOne  + 1 )
          let cartItem = {
             cartItem_id:props.id,
         }
@@ -190,13 +193,13 @@ function BookDetails(props) {
 
     const decrement = () =>{
         if(counterOne > 1){
-            setCounterOne(counterOne -  1 )          
+            setCounterOne(counterOne =>counterOne -  1 )          
         
         let cartItem = {
             cartItem_id:props.id,
         }
         let quantity={
-            quantityToBuy:counterOne + 1
+            quantityToBuy:counterOne - 1
         }
         console.log('object',quantity)
         cartItemQuantity(cartItem,quantity).then((response)=>{
@@ -208,7 +211,7 @@ function BookDetails(props) {
         }
     }
     const handleWishList = () => {
-        setWishIcon(true)
+       
         let object = {product_id:props.id}
         addWishList(object).then((response) => {
 
@@ -216,6 +219,7 @@ function BookDetails(props) {
         }).catch((error) => {
             console.log(error)
         })
+        setWishIcon(true)
         // setWishIcon(prevState =>({
         //     ...prevState,
         //     wishIcon:true
@@ -233,7 +237,7 @@ function BookDetails(props) {
                     setCartId(cart._id)
                     console.log(cart._id,cart.quantityToBuy,"id")
                     return cart
-                }
+                }   
                 })
             setCartBookId(idList)
         }).catch((error)=>console.log(error))
@@ -245,7 +249,7 @@ function BookDetails(props) {
                 if(props.id === cart.product_id._id){
                    // setCounterOne(cart.quantityToBuy)
                     setWishListId(cart._id)
-                    console.log(cart._id,cart.quantityToBuy,"id")
+                    console.log(cart._id,"id")
                     return cart
                 }
                 })
@@ -328,15 +332,12 @@ function BookDetails(props) {
                         < FavoriteIcon style={{ color: 'white', height: '20px' }} /> wishlist
                         </Button>
                         : 
+                    
                         <Button onClick = {removeFromWishlist} style={{ width: '45%', height: '75%', color: 'white', border:'1px solid lightgrey' }}>
 
                         < FavoriteIcon style={{ color: 'red', height: '20px' }} /></Button> 
 
-  
                         }
-                          
-                            
-                        
 
                     </div>
 
@@ -449,23 +450,11 @@ function BookDetails(props) {
                         </span>
 
                     </div>
-                    {/* <div className = {classes.reviewcontainer}>
-                        <p style={{ width:'30%',height:'15%',border:'0px solid green',
-                        position:'relative',borderRadius:'0px'}}>
-                            <span style={{border:'1px solid grey',borderRadius:'5px',position:'relative',}}>SB &nbsp;</span>
-                            &nbsp;&nbsp;&nbsp;Shweta Bodkar</p>
-                            <Rating name="size-medium" spacing={2} defaultValue={4} 
-                            style={{ position: 'relative', top: '0px', left: '45px' }} />
-
-                        <span style={{position:'relative',top:'5px',left:'45px',textAlign:'left',fontSize:'15px'}}>
-                            Good Product. Even Though the translation could have been better.chanakaya's neeti are thought
-                            provoking and has written different topics and his writings are succint.
-                        </span>
-                            
-                    </div>  */}
+                   
                 </div>
 
             </div>
+           <div className={classes.pagenumber}></div>
             {/* <Footer/> */}
         </div>
     )

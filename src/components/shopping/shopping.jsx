@@ -39,7 +39,7 @@ const useStyle = makeStyles({
         border:'0px solid #DCDCDC',
         position:'relative',
         left:'300px',
-        top:'30px',
+        top:'60px',
         display:'flex',
         flexDirection:'column',
         alignItems:'center',
@@ -76,7 +76,7 @@ const useStyle = makeStyles({
         height:'5vh',
         border:'0px solid blue',
         position:'relative',
-        top:'40px',
+        top:'80px',
         left:'610px',
         display:'flex',
         flexDirection:'row',
@@ -107,7 +107,7 @@ function Shopping(props) {
     }
     return(
         <div>
-            <Header />
+            {/* <Header /> */}
             <Box className={classes.orderimagecontainer}>
                 <Box className={classes.orderplacedimage}>
                     <img src={require("./orderplaced.jpeg")} alt="img"
@@ -147,10 +147,10 @@ function Shopping(props) {
             continue shopping
             </Button>
             </Box>
-            <Box className={classes.footercontainershopping}>
+            {/* <Box className={classes.footercontainershopping}>
                 <span style={{ position: 'relative',
         left: '130px', top:'20px',textAlign:'left',fontSize:'12px'}}>Copyright 2020, Bookstore Private Limited.All Rights Reserved</span>
-            </Box>
+            </Box> */}
 
 
         </div>
