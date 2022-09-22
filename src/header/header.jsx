@@ -4,7 +4,7 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import { makeStyles } from '@mui/styles';
 import Badge from '@mui/material/Badge';
-
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -64,18 +64,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-function Header() {
+function Header({searchBook,searchWord}) {
     const navigate = useNavigate()
+    
+    const [search,setSearch] = React.useState('')
+    const [searchResults,setSearchResults] = [];
+  
 
     const openMyCart =()=>{
         navigate('/mycart')
     }
+    const openWishlist = ()=>{
+        navigate('/wishlist')
+    }
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
     const classes = useStyle();
-
-    const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const input = React.useRef('')
+    
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -96,8 +102,28 @@ function Header() {
 
     const menuId = 'primary-search-account-menu';
 
+    // const searchItems = (event) =>{
+    //     setSearch(event.target.value)
+    // }
+    // console.log(search,"search...")
 
-
+    // const searchHandler = (search)=>{
+    //     console.log(search)
+    //     setSearch(search)
+    //     if(search !== ''){
+    //         const newBookList = props.booksList.filter(book=>book.bookName).map((filteredbook)=>(
+    //         (filteredbook.book)))
+    //         //   return  Object.values(book)
+    //         //     .join('')
+    //         //     .toLowerCase()
+    //         //     .includes(search.toLowerCase());
+        
+    //         setSearchResults(newBookList)
+    //     }
+    //     else{
+    //         setSearchResults(props.booksList)
+    //     }
+    // }
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -159,17 +185,21 @@ function Header() {
                             <SearchIcon style={{ color: 'default' }} />
                         </SearchIconWrapper>
                         <StyledInputBase
-
+                            type="text"
+                            inpurProps={{'aria-label':'search'}}
                             placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
+                            value = {searchWord}
+                            onChange={searchBook}
+                           
                         />
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{
                         display: { xs: 'none', md: 'flex' }, flexDirection: 'row',
-                        border: '0px solid black', justifyContent: 'center',position:'relative',right:'68px', width: '55%', height: 'auto'
+                        border: '0px solid black', justifyContent: 'center',
+                        position:'relative',right:'90px', width: '45%', height: 'auto'
                     }}>
-                        <IconButton size="large"
+                        <IconButton size="medium"
                             sx={{
                                 border: '0px solid black', borderRadius: '0', width: '20%',
                                 display: 'flex', flexDirection: 'column'
@@ -182,8 +212,22 @@ function Header() {
                             <Box style={{ fontSize: '8px', color: 'white' }}> Profile</Box>
 
                         </IconButton>
+                        <IconButton onClick={openWishlist}
+                            size="medium"
+                            color="inherit"
+                            sx={{
+                                border: '0px solid black', borderRadius: '0', width: '20%',
+                                display: 'flex', flexDirection: 'column'
+                            }}
+                        >
+                            <Badge sx={{ border: '0px solid black' }}>
+                                < FavoriteBorderIcon size="medium" style={{ color: 'white' }} />
+
+                            </Badge>
+                            <Box style={{ fontSize: '9px', color: 'white' }} >wishlist</Box>
+                        </IconButton>
                         <IconButton onClick={openMyCart}
-                            size="large"
+                            size="medium"
                             color="inherit"
                             sx={{
                                 border: '0px solid black', borderRadius: '0', width: '20%',
