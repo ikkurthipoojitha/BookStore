@@ -11,12 +11,6 @@ const useStyle = makeStyles({
     container: {
         width: '100vw',
         height: '100vh',
-      // marginTop: '60px',
-      // marginLeft: '220px',
-      //  marginBottom: '50px',
-        // display:'flex',
-        // flexDirection:'row',
-        // justifyContent:'center',
         border: '1px solid grey',
         backgroundColor: 'grey',
         position: 'relative',
@@ -28,7 +22,7 @@ const useStyle = makeStyles({
         position:'relative',
         top: '150px',
         left: '350px',
-        //border: '1px solid green',
+        border: '1px solid green',
         backgroundColor: 'white',
         borderRadius:'20px 0px 0px 20px',
     },
@@ -49,6 +43,46 @@ const useStyle = makeStyles({
     textspan: {
         fontSize: '15px',
         fontWeight: 'stronger',
+    },
+    ['@media only screen and (min-width :320px) and (max-width :480px)']: {
+        logocontainer:{
+            display:'none',
+        },
+    },
+    ['@media only screen and (min-width :481px) and (max-width :720px)']: {
+        logocontainer:{
+            display:'none',
+        },
+    },
+    ['@media only screen and (min-width :721px) and (max-width :1024px)']: {
+        logocontainer: {
+            width: '250px',
+            height: '285px',
+            position:'relative',
+            top: '120px',
+            left: '180px',
+            border: '1px solid grey',
+            backgroundColor: 'white',
+            borderRadius:'20px 0px 0px 20px',
+        },
+        logodiv: {
+            width: '80%',
+            height: '80%',
+            marginLeft: '25px',
+            marginTop:'10px',
+    
+           //border: '1px solid red',
+            // position:'absolute',
+        },
+        imgdiv: {
+            width: '70%',
+            height: '80%',
+            position: 'relative',
+        },
+        textspan: {
+            fontSize: '15px',
+            fontWeight: 'stronger',
+        },
     },
 
 

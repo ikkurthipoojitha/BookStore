@@ -12,13 +12,61 @@ const useStyle = makeStyles({
         border:'0px solid blue',
         position:'relative',
         left:'450px',
-        top:'200px',
+        top:'70px',
         display:'flex',
         flexDirection:'row',
         justifyContent:'center',
         aliginContent:'center',
         
 
+    },
+    
+    ['@media only screen and (min-width :320px) and (max-width :480px)']: {
+        pagenumber:{
+            width:'350px',
+            height:'40px',
+            border:'0px solid blue',
+            position:'relative',
+            left:'45px',
+            top:'70px',
+            display:'flex',
+            flexDirection:'row',
+            justifyContent:'center',
+            aliginContent:'center',
+        },
+    },
+    ['@media only screen and (min-width :481px) and (max-width :720px)']: {
+        pagenumber:{
+            width:'350px',
+            height:'40px',
+            border:'0px solid blue',
+            position:'relative',
+            left:'120px',
+            top:'70px',
+            display:'flex',
+            flexDirection:'row',
+            justifyContent:'center',
+            aliginContent:'center',
+            
+    
+        },
+    },
+    ['@media only screen and (min-width :721px) and (max-width :1024px)']: {
+        pagenumber:{
+            width:'350px',
+            height:'40px',
+            border:'0px solid blue',
+            position:'relative',
+            left:'250px',
+            top:'70px',
+            display:'flex',
+            flexDirection:'row',
+            justifyContent:'center',
+            aliginContent:'center',
+            alignItems:'center',
+            
+    
+        },
     },
 })
 

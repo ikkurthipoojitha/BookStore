@@ -21,7 +21,7 @@ const useStyle = makeStyles({
         bottom:'510px',
         left:'590px',
         borderRadius:'20px',
-        //border: '1px solid blue',
+        border: '0px solid blue',
 
         
     },
@@ -40,10 +40,126 @@ const useStyle = makeStyles({
     },
     signupfull: {
         width: '68%',
-        height: '20%',
+        height: '14%',
         position:'relative',
         left: '50px',
-    }
+        border: '0px solid blue',
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'center',
+    },
+    ['@media only screen and (min-width :320px) and (max-width :480px)']: {
+        containerup: {
+            width: '60vw',
+            height: '69vh',
+            backgroundColor:'white',
+            boxShadow:'2px 2px 2px 2px grey',
+            position:'relative',
+            bottom:'470px',
+            left:'110px',
+            borderRadius:'20px',
+            border: '0px solid black',
+        },
+        signupbutton: {
+            width: '100%',
+            height: '18%',
+            border: '0px solid blue',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-evenly'
+        },
+        textfieldup: {
+            width: '100%',
+            height: '16%',
+            border: '0px solid blue',
+    
+        },
+        signupfull: {
+            width: '65%',
+            height: '12%',
+            position:'relative',
+            left: '16%',
+            border: '0px solid blue',
+            display:'flex',
+            flexDirection:'row',
+            justifyContent:'center',
+        },
+        
+    },
+    ['@media only screen and (min-width :481px) and (max-width :720px)']: {
+        containerup: {
+            width: '48vw',
+            height: '69vh',
+            backgroundColor:'white',
+            boxShadow:'2px 2px 2px 2px grey',
+            position:'relative',
+            bottom:'470px',
+            left:'170px',
+            borderRadius:'20px',
+            border: '0px solid black',
+        },
+        signupbutton: {
+            width: '100%',
+            height: '18%',
+            border: '0px solid green',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-evenly'
+        },
+        textfieldup: {
+            width: '100%',
+            height: '16%',
+            border: '0px solid red',
+    
+        },
+        signupfull: {
+            width: '60%',
+            height: '14%',
+            position:'relative',
+            left: '20%',
+            border: '0px solid blue',
+            display:'flex',
+            flexDirection:'row',
+            justifyContent:'center',
+        },
+    },
+    ['@media only screen and (min-width :721px) and (max-width :1024px)']: {
+        containerup: {
+            width: '280px',
+            height: '370px',
+            backgroundColor:'white',
+            boxShadow:'2px 2px 2px 2px grey',
+            position:'relative',
+            bottom:'455px',
+            left:'420px',
+            borderRadius:'20px',
+            border: '0px solid black',
+        },
+        signupbutton: {
+            width: '100%',
+            height: '15%',
+            border: '0px solid green',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-evenly'
+        },
+        textfieldup: {
+            width: '100%',
+            height: '16%',
+            border: '0px solid red',
+    
+        },
+        signupfull: {
+            width: '68%',
+            height: '14%',
+            position:'relative',
+            left: '50px',
+            border: '0px solid blue',
+            display:'flex',
+            flexDirection:'row',
+            justifyContent:'center',
+        },
+    },
 })
 
 function Signup(props) {
